@@ -2,10 +2,8 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
-
 ### SETUP ELEMENTS FOR GRAPHING, SIMULATION, VISUALIZATION, TIMING
 # ------------------------------------------------------------------------
 
@@ -14,16 +12,16 @@ scene.title = "Incline Plane"
 
 # Make scene background black
 scene.background = color.black
-scene.center = (5, 1, 0) # location at which the camera looks
+scene.center = vector(5, 1, 0) # location at which the camera looks
 
 # Define scene objects (units are in meters)
 
 # 10-m long inclined plane whose center is at 5 m
-inclinedPlane = box(pos = vector(5, 0, 0), size = (10, 0.02, 0.2),
+inclinedPlane = box(pos = vector(5, 0, 0), size = vector(10, 0.02, 0.2),
     color = color.green, opacity = 0.3)
 
 # 20-cm long cart on the inclined plane
-cart = box(size = (0.2, 0.06, 0.06), color = color.blue)
+cart = box(size = vector(0.2, 0.06, 0.06), color = color.blue)
 
 # Set up graph with two plots
 posgraph = PhysGraph()
@@ -59,8 +57,8 @@ cart.v = vector(0, 0, 0) # initial velocity of car in (vx, vy, vz) form, units a
 theta = 22.0 * (pi / 180.0)
 
 # rotate the cart and the inclined plane based on the specified angle (counterclockwise)
-inclinedPlane.rotate(angle = theta, origin = (0, 0, 0), axis = (0,0,1))
-cart.rotate(angle = theta, origin = (0, 0, 0), axis = (0,0,1))
+inclinedPlane.rotate(angle = theta, origin = vector(0, 0, 0), axis = vector(0,0,1))
+cart.rotate(angle = theta, origin = vector(0, 0, 0), axis = vector(0,0,1))
 
 g = 9.8 # acceleration due to gravity; units are m/s/s
 
@@ -68,7 +66,7 @@ g = 9.8 # acceleration due to gravity; units are m/s/s
 t = 0 # starting time
 deltat = 0.0005  # time step units are s
 
-print "initial cart position (m): ", cart.pos
+print("initial cart position (m): ", cart.pos)
 
 
 ### CALCULATION LOOP; perform physics updates and drawing
@@ -107,9 +105,9 @@ while cart.pos.y > 0.04 :  # while the cart's y-position is greater than 0 (abov
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the cart's final position
-print "final time (s): ", t
-print "final cart position (m): ", cart.pos
-print "final cart velocity (m/s): ", cart.v
-print "final cart speed (m/s): ", mag(cart.v)
-print "final cart acceleration (m/s/s): ", (mag(Fnet) / cart.m)
+print("final time (s): ", t)
+print("final cart position (m): ", cart.pos)
+print("final cart velocity (m/s): ", cart.v)
+print("final cart speed (m/s): ", mag(cart.v))
+print("final cart acceleration (m/s/s): ", (mag(Fnet) / cart.m))
 

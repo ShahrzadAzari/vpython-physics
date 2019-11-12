@@ -1,49 +1,11 @@
-# physutil.py v1.22
-# Copyright (c) 2011-2012 GT Physics Education Research Group
-# License: GPL-3.0 (http://opensource.org/licenses/GPL-3.0)
-
-# This module is built to simplify and assist high school physics students
-# in the construction of models for lab exercises using VPython.
-
-
-# Revisions by date
-
-# v1.22 24 January 2011 -- Danny Caballero
-# Added labelColor attribute to PhysAxis, MotionMap, and MotionMapN
-# controls color of text
-
-# v1.21 5 December 2011 -- Danny Caballero
-# Added timerColor attribute to PhysTimer
-# controls color of text
-
-# v1.2 19 October 2011 -- Danny Caballero
-# Added MotionMapN, a class that allows the placing of breadcrumbs or arrows
-# every "n" steps.
-
-# v1.13 26 September 2011 -- Daniel Borrero
-# Fixed unit test bug for PhysTimer
-
-# v1.12 30 August 2011 -- Daniel Borrero
-# Fixed bug in PhysTimer output
-# E.g., 2.00 s is now displayed as 00:00:02.00 instead of 00:00:01:100
-
-# v1.11 29 August 2011 -- Danny Caballero
-# Changed License to GNU
-
-# v1.1 15 August 2011 -- Daniel Borrero
-# Print statements made compatible with Python 3.1
-
-# v1.01 16 July 2011 -- Danny Caballero
-# Added ability to change PhysAxis color using axisColor
-
-# v1.0 29 April 2011 -- CS Build Team
-# Heavy Modification
-
-# v0.1 05 January 2011 -- Danny Caballero
-# Initial Build
+# physutil.py (v1.27)
+# An open-source module for highly visual animations
 
 from __future__ import division
 import unittest
+import csv;
+import sys;
+from numpy import ndarray as numpy_ndarray;
 
 """
 #
@@ -56,7 +18,7 @@ import unittest
 # Determine whether we are being used as a module or just running unittests (for mock purposes this is important)
 if __name__ == "__main__":
     # If we are unit testing, set up mock objects (must be done before classes are defined below!)
-    from visual import vector
+    from vpython import vector
     class Mock:
         def __init__(self, name, *args, **kwargs):
             self.name = name
@@ -87,7 +49,7 @@ if __name__ == "__main__":
     label = Mock("label")
     points = Mock("points")
     curve = Mock("curve")
-    gdisplay = Mock("gdisplay")
+    graph = Mock("graph")
     gcurve = Mock("gcurve")
     gcurve.plots = []
     def mockPlot(pos):
@@ -105,8 +67,7 @@ if __name__ == "__main__":
 
 else:
     # These are the actual imports for the utility
-    from visual import *
-    from visual.graph import *
+    from vpython import *
 
 
 """
@@ -178,7 +139,7 @@ class MotionMap:
         self.curMarker = 0
 
 
-    def update(self, t, quantity=1):
+    def update(self, t, quantity=vector(0,0,0)):
         try:
             # Display new arrow if t has broken next threshold
             if t > (self.interval * self.curMarker):
@@ -189,9 +150,10 @@ class MotionMap:
                 if self.markerType == "arrow":
                     arrow(pos=self.obj.pos+self.arrowOffset, 
                         axis=self.markerScale*quantity, color=self.markerColor)
-                elif self.markerType == "breadcrumbs":
+                elif self.markerType == "breadcrumbs":                    
                     points(pos=self.obj.pos, 
-                        size=10*self.markerScale*quantity, color=self.markerColor)
+                        #size=10*self.markerScale*quantity, 
+                        color=self.markerColor)
 
                 #Also display timestamp if requested
                 if self.dropTime is not False:
@@ -257,7 +219,7 @@ class MotionMapN:
         self.curMarker = 0
 
 
-    def update(self, t, quantity=1):
+    def update(self, t, quantity=vector(0,0,0)):
         try:
 
             threshold = self.interval * self.curMarker
@@ -317,7 +279,7 @@ class PhysAxis:
             self.axisType = axisType
             self.axis = axis if axisType != "y" else vector(0,1,0)
             self.length = length if (length is not None) else obj_size(obj).x
-            self.startPos = startPos if (startPos is not None) else vector(-obj_size(obj).x/2,-4*obj_size(obj).y,0)
+            self.startPos = startPos if (startPos is not None) else vector(-obj_size(obj).x/2,-4*obj_size(obj).y,0) + self.obj.pos
             self.axisColor = axisColor
             self.labelColor = labelColor
 
@@ -426,10 +388,11 @@ class PhysTimer:
     This class assists students in creating an onscreen timer display.
     """
     
-    def __init__(self, x, y, useScientific=False, timerColor=color.white):
+    def __init__(self, x, y, fontsize = 13, useScientific=False, timerColor=color.white):
         
         # PhysTimer
         # x,y - world coordinates for the timer location
+        # fontsize - size of font for timer text
         # useScientific - bool to turn off/on scientific notation for time
         # timerColor - attribute controlling the color of the text
         
@@ -437,9 +400,9 @@ class PhysTimer:
             self.useScientific = useScientific
             self.timerColor = timerColor
             if useScientific is False:
-                self.timerLabel = label(pos=vector(x,y,0), text='00:00:00.00', box=False)
+                self.timerLabel = label(pos=vector(x,y,0), text='00:00:00.00', box=False, height = fontsize)
             else:
-                self.timerLabel = label(pos=vector(x,y,0), text='00E01', box=False)
+                self.timerLabel = label(pos=vector(x,y,0), text='00E01', box=False, height = fontsize)
         except TypeError as err:
             print("**********TYPE ERROR**********")
             print("Please check that you are not passing in a variable of the wrong type (e.g. a scalar as a vector, or vice-versa)!")
@@ -477,10 +440,17 @@ class PhysGraph:
     graphColors = [color.red, color.green, color.blue, color.yellow, 
                     color.orange, color.cyan, color.magenta, color.white]
 
-    def __init__(self, numPlots=1):
+    def __init__(self, numPlots=1, title = None, xlabel = None, ylabel = None, backgroundColor = color.white):
+
+        # title - sets window title
+        # xlabel - sets label on the horizontal axis
+        # ylabel - sets label on the vertical axis
+        # backgroundColor - sets background color of graph
+        
         try:
             # Create our specific graph window
-            self.graphDisplay = gdisplay(475,350)
+            self.graphDisplay = graph(x = 475, y = 350, title = title, xtitle = xlabel, ytitle = ylabel, background = backgroundColor)
+
             self.numPlots = numPlots
 
             # Initialize each plot curve
@@ -508,6 +478,110 @@ class PhysGraph:
             print("******************************")
             print(err)
             raise err
+
+#########################################################################################
+##  CSV Functions readcsv(), writecsv()
+def readcsv(filename,cols=1, IgnoreHeader=False, startrow = 0, NumericData=True):
+    data = [0]*(cols);
+    for i in range(cols):
+        data[i]=[];
+    if sys.version_info.major == 2:
+        with open(filename,'rb') as csvfile:  #open the file, and iterate over its data
+            csvdata = csv.reader(csvfile);   #tell python that the file is a csv
+            for i in range(0,startrow): #skip to the startrow
+                csvdata.next();
+            if IgnoreHeader and startrow!=0:
+                csvdata.next(); #if ignoring header, advance one row
+            for row in csvdata:     #iterate over the rows in the csv
+                #Assign the cols of each row to a variable
+                for c in range(cols):   #read in the text values as floats in the array
+                    if NumericData:
+                        data[c].append(float(row[c]));
+                    else:
+                        data[c].append(row[c]);
+    elif sys.version_info.major == 3:
+        with open(filename,newline='') as csvfile:  #open the file, and iterate over its data
+            csvdata = csv.reader(csvfile);   #tell python that the file is a csv
+            for i in range(0,startrow): #skip to the startrow
+                csvdata.next();
+            if ignoreHeader and startrow!=0:
+                csvdata.next(); #if ignoring header, advance one row
+            for row in csvdata:     #iterate over the rows in the csv
+                #Assign the cols of each row to a variable
+                for c in range(cols):   #read in the text values as floats in the array
+                    if NumericData:
+                        data[c].append(float(row[c]));
+                    else:
+                        data[c].append(row[c]);
+    else:
+        sys.stderr.write('You need to use python 2* or 3* \n');
+        exit(1);
+    return data;
+
+def writecsv(filename,datalist, header=[]):
+    csvfile = [];
+    useheader = False;
+    #make sure we have the correct versions of python
+    if sys.version_info.major == 2:
+        csvfile = open(filename,'wb');
+    elif sys.version_info.major == 3:
+        csvfile = open('pythonTest.csv', 'w',newline='');
+    else:
+        sys.stderr.write('You need to use python 2* or 3* \n');
+        exit(1);
+
+    #if user passed a numpy array, convert it
+    if isinstance(datalist,numpy_ndarray):
+        datalist = datalist.T;
+        datalist = datalist.tolist();
+    #if there is no data, close the file
+    if len(datalist)<1:
+        csvfile.close();
+        return;
+    #check to see if datalist is a single list or list of lists
+    isLofL = False;
+    ListLength = 0;
+    numLists = 0;
+    if isinstance(datalist[0],(list,tuple)):    #check the first element in datalist
+        isLofL = True;
+        ListLength = len(datalist[0]);
+        numLists = len(datalist);
+    else:
+        isLofL = False;
+        ListLength = len(datalist);
+        numLists = 1;
+    #if a list then make sure everything is the same length
+    if isLofL:
+        for Lidx in range(1,len(datalist)):
+            if len(datalist[Lidx])!=ListLength:
+                sys.stderr.write('All lists in datalist must be the same length \n');
+                csvfile.close();
+                return;
+    #if header is present, make sure it is the same length as the number of cols
+    if len(header)!=0:
+        if len(header)!=numLists:
+            sys.stderr.write('Header length did not match the number of columns, ignoring header.\n');
+        else:
+            useheader = True;
+
+    #now that we've checked the inputs, loop and write outputs
+    DataWriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL) # Create writer object
+    if useheader:
+        DataWriter.writerow(header);
+    for row in range(0,ListLength):
+        thisrow = [];
+        if numLists > 1:
+            for col in range(0,numLists):
+                thisrow.append(datalist[col][row]);
+        else:
+            thisrow.append(datalist[row]);
+
+        DataWriter.writerow(thisrow);
+
+    #close the csv file to save
+    csvfile.close();
+## END CSV Functions
+#########################################################################################
 
 """
 #
@@ -703,7 +777,8 @@ class TestPhysGraph(unittest.TestCase):
         self.physGraph = PhysGraph(numPlots = 5)
 
     def test_init(self):
-        self.assertEqual(self.physGraph.graphDisplay.args, (475, 350))
+        self.assertEqual(self.physGraph.graphDisplay.x, 475)
+        self.assertEqual(self.physGraph.graphDisplay.y, 350)
         self.assertEqual(self.physGraph.numPlots, 5)
         self.assertEqual(len(self.physGraph.graphs), 5)
 

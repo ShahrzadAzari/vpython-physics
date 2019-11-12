@@ -2,10 +2,8 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
-
 ### SETUP ELEMENTS FOR GRAPHING, SIMULATION, VISUALIZATION, TIMING
 # ------------------------------------------------------------------------
 
@@ -14,11 +12,11 @@ scene.title = "Mass on Spring"
 
 # Make scene background black
 scene.background = color.black
-scene.center = (0, 1, 0)
+scene.center = vector(0, 1, 0)
 
 # Define scene objects (units are in meters)
 springLengthInitial = 1.0
-spring = helix(axis = (0, 1, 0), length = springLengthInitial, radius = 0.1,
+spring = helix(axis = vector(0, 1, 0), length = springLengthInitial, radius = 0.1,
    thickness = 0.05, color = color.green)
 mass = sphere(radius = 0.2, color = color.blue)
 

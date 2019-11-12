@@ -2,9 +2,8 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
 
 ### SETUP ELEMENTS FOR GRAPHING, SIMULATION, VISUALIZATION, TIMING
 # ------------------------------------------------------------------------
@@ -14,11 +13,11 @@ scene.title = "Incline Plane"
 
 # Make scene background black
 scene.background = color.black
-scene.center = (1, 1, 0)
+scene.center = vector(1, 1, 0)
 
 # Define scene objects (units are in meters)
-inclinedPlane = box(pos = vector(1, 0, 0), size = (2, 0.02, 0.2), color = color.green, opacity = 0.3)
-cart = box(size = (0.2, 0.06, 0.06), color = color.blue)
+inclinedPlane = box(pos = vector(1, 0, 0), size = vector(2, 0.02, 0.2), color = color.green, opacity = 0.3)
+cart = box(size = vector(0.2, 0.06, 0.06), color = color.blue)
 
 # Set up graph with two plots
 posgraph = PhysGraph()
@@ -50,8 +49,8 @@ cart.v = vector(0, 0, 0) # initial velocity of car in (vx, vy, vz) form, units a
 theta = pi/8.0
 
 # rotate the cart and the inclined plane based on the specified angle
-inclinedPlane.rotate(angle = theta, origin = (0, 0, 0), axis = (0,0,1))
-cart.rotate(angle = theta, origin = (0, 0, 0), axis = (0,0,1))
+inclinedPlane.rotate(angle = theta, origin = vector(0, 0, 0), axis = vector(0,0,1))
+cart.rotate(angle = theta, origin = vector(0, 0, 0), axis = vector(0,0,1))
 
 g = -9.8 # acceleration due to gravity; units are m/s/s
 
@@ -96,5 +95,5 @@ while cart.pos.y > 0 :  # while the cart's y-position is greater than 0 (above t
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the cart's final position
-print t
-print cart.pos
+print(t)
+print(cart.pos)

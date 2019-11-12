@@ -49,7 +49,7 @@ if __name__ == "__main__":
     label = Mock("label")
     points = Mock("points")
     curve = Mock("curve")
-    gdisplay = Mock("gdisplay")
+    graph = Mock("graph")
     gcurve = Mock("gcurve")
     gcurve.plots = []
     def mockPlot(pos):
@@ -68,6 +68,7 @@ if __name__ == "__main__":
 else:
     # These are the actual imports for the utility
     from vpython import *
+
 
 """
 #
@@ -96,10 +97,7 @@ class MotionMap:
     (with timestamps).
     """
     
-    def __init__(self, obj, tf, numMarkers, markerType="arrow", 
-                markerScale=1, markerColor=color.red, 
-                labelMarkerOrder=True, labelMarkerOffset=vector(0,0,0),
-                dropTime=False, timeOffset=vector(0,0,0), arrowOffset=vector(0,0,0), labelColor=color.white):
+    def __init__(self, obj, tf, numMarkers, markerType="arrow", markerScale=1, markerColor=color.red, labelMarkerOrder=True, labelMarkerOffset=vector(0,0,0), dropTime=False, timeOffset=vector(0,0,0), arrowOffset=vector(0,0,0), labelColor=color.white):
         # MotionMap
         # obj - object to track in mapping / placing markers
         # tf - expected tFinal, used to space marker placement over time
@@ -147,11 +145,10 @@ class MotionMap:
                 
                 # Display marker!
                 if self.markerType == "arrow":
-                    arrow(pos=self.obj.pos+self.arrowOffset, 
-                        axis=self.markerScale*quantity, color=self.markerColor)
-                elif self.markerType == "breadcrumbs":
-                    points(pos=self.obj.pos, 
-                        size=10*self.markerScale*quantity, color=self.markerColor)
+                    arrow(pos=self.obj.pos+self.arrowOffset, axis=self.markerScale*quantity, color=self.markerColor)
+                elif self.markerType == "breadcrumbs":                    
+#size=10*self.markerScale*quantity, 
+                    points(pos=self.obj.pos, color=self.markerColor)
 
                 #Also display timestamp if requested
                 if self.dropTime is not False:
@@ -175,10 +172,7 @@ class MotionMapN:
     (with timestamps).
     """
     
-    def __init__(self, obj, dt, numSteps, markerType="arrow", 
-                markerScale=1, markerColor=color.red, 
-                labelMarkerOrder=True, labelMarkerOffset=vector(0,0,0),
-                dropTime=False, timeOffset=vector(0,0,0), arrowOffset=vector(0,0,0), labelColor=color.white):
+    def __init__(self, obj, dt, numSteps, markerType="arrow", markerScale=1, markerColor=color.red, labelMarkerOrder=True, labelMarkerOffset=vector(0,0,0), dropTime=False, timeOffset=vector(0,0,0), arrowOffset=vector(0,0,0), labelColor=color.white):
         # MotionMapN
         # obj - object to track in mapping / placing markers
         # dt - time between steps
@@ -229,11 +223,9 @@ class MotionMapN:
                 
                 # Display marker!
                 if self.markerType == "arrow":
-                    arrow(pos=self.obj.pos+self.arrowOffset, 
-                        axis=self.markerScale*quantity, color=self.markerColor)
+                    arrow(pos=self.obj.pos+self.arrowOffset, axis=self.markerScale*quantity, color=self.markerColor)
                 elif self.markerType == "breadcrumbs":
-                    points(pos=self.obj.pos, 
-                        size=10*self.markerScale*quantity, color=self.markerColor)
+                    points(pos=self.obj.pos, size=10*self.markerScale*quantity, color=self.markerColor)
 
                 #Also display timestamp if requested
                 if self.dropTime is not False:
@@ -256,8 +248,7 @@ class PhysAxis:
     This class assists students in creating dynamic axes for their models.
     """
     
-    def __init__(self, obj, numLabels, axisType="x", axis=vector(1,0,0), startPos=None, 
-                length=None, labels = None, labelOrientation="down", axisColor=color.yellow, labelColor=color.white):
+    def __init__(self, obj, numLabels, axisType="x", axis=vector(1,0,0), startPos=None, length=None, labels = None, labelOrientation="down", axisColor=color.yellow, labelColor=color.white):
         # PhysAxis
         # obj - Object which axis is oriented based on by default
         # numLabels - number of labels on axis
@@ -369,10 +360,8 @@ class PhysAxis:
                 self.intervalLabels[i].pos = intervalPos+self.labelShift
                 self.intervalLabels[i].text = str(labelText)
             else:
-                self.intervalMarkers.append(
-                    points(pos=intervalPos,color=self.axisColor,size = 6) )
-                self.intervalLabels.append(
-                    label(pos=intervalPos+self.labelShift, text=str(labelText),box=False,height = 8, color=self.labelColor) )
+                self.intervalMarkers.append( points(pos=intervalPos,color=self.axisColor,size = 6) )
+                self.intervalLabels.append( label(pos=intervalPos+self.labelShift, text=str(labelText),box=False,height = 8, color=self.labelColor) )
             i=i+1
 
         # Finally, create / update the line itself!
@@ -383,7 +372,7 @@ class PhysAxis:
     
 class PhysTimer:
     """
-    This class assists students in creating an onscreen timer display.
+    This class assists students in creating an onscreen timer canvas.
     """
     
     def __init__(self, x, y, fontsize = 13, useScientific=False, timerColor=color.white):
@@ -447,7 +436,7 @@ class PhysGraph:
         
         try:
             # Create our specific graph window
-            self.graphDisplay = gdisplay(x = 475, y = 350, title = title, xtitle = xlabel, ytitle = ylabel, background = backgroundColor)
+            self.graphDisplay = graph(x = 475, y = 350, title = title, xtitle = xlabel, ytitle = ylabel, background = backgroundColor)
 
             self.numPlots = numPlots
 
@@ -484,29 +473,41 @@ def readcsv(filename,cols=1, IgnoreHeader=False, startrow = 0, NumericData=True)
     for i in range(cols):
         data[i]=[];
     if sys.version_info.major == 2:
-        with open(filename,'rb') as csvfile:  #open the file, and iterate over its data
-            csvdata = csv.reader(csvfile);   #tell python that the file is a csv
-            for i in range(0,startrow): #skip to the startrow
+#open the file, and iterate over its data
+        with open(filename,'rb') as csvfile:  
+#tell python that the file is a csv
+            csvdata = csv.reader(csvfile);   
+#skip to the startrow
+            for i in range(0,startrow): 
                 csvdata.next();
             if IgnoreHeader and startrow!=0:
-                csvdata.next(); #if ignoring header, advance one row
-            for row in csvdata:     #iterate over the rows in the csv
+#if ignoring header, advance one row
+                csvdata.next(); 
+#iterate over the rows in the csv
+            for row in csvdata:     
                 #Assign the cols of each row to a variable
-                for c in range(cols):   #read in the text values as floats in the array
+#read in the text values as floats in the array
+                for c in range(cols):   
                     if NumericData:
                         data[c].append(float(row[c]));
                     else:
                         data[c].append(row[c]);
     elif sys.version_info.major == 3:
-        with open(filename,newline='') as csvfile:  #open the file, and iterate over its data
-            csvdata = csv.reader(csvfile);   #tell python that the file is a csv
-            for i in range(0,startrow): #skip to the startrow
+#open the file, and iterate over its data
+        with open(filename,newline='') as csvfile:  
+#tell python that the file is a csv
+            csvdata = csv.reader(csvfile);   
+#skip to the startrow
+            for i in range(0,startrow): 
                 csvdata.next();
             if ignoreHeader and startrow!=0:
-                csvdata.next(); #if ignoring header, advance one row
-            for row in csvdata:     #iterate over the rows in the csv
+#if ignoring header, advance one row
+                csvdata.next(); 
+#iterate over the rows in the csv
+            for row in csvdata:     
                 #Assign the cols of each row to a variable
-                for c in range(cols):   #read in the text values as floats in the array
+#read in the text values as floats in the array
+                for c in range(cols):   
                     if NumericData:
                         data[c].append(float(row[c]));
                     else:
@@ -540,7 +541,8 @@ def writecsv(filename,datalist, header=[]):
     isLofL = False;
     ListLength = 0;
     numLists = 0;
-    if isinstance(datalist[0],(list,tuple)):    #check the first element in datalist
+#check the first element in datalist
+    if isinstance(datalist[0],(list,tuple)):    
         isLofL = True;
         ListLength = len(datalist[0]);
         numLists = len(datalist);
@@ -563,7 +565,8 @@ def writecsv(filename,datalist, header=[]):
             useheader = True;
 
     #now that we've checked the inputs, loop and write outputs
-    DataWriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL) # Create writer object
+# Create writer object
+    DataWriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL) 
     if useheader:
         DataWriter.writerow(header);
     for row in range(0,ListLength):
@@ -603,9 +606,7 @@ class TestMotionMap(unittest.TestCase):
         points.reset()
         label.reset()
 
-        self.map = MotionMap(self.obj, self.tf, self.numMarkers, markerType="arrow", 
-                    markerScale=2, markerColor=color.green,
-                    dropTime=True, timeOffset=self.timeOffset, arrowOffset=self.arrowOffset)
+        self.map = MotionMap(self.obj, self.tf, self.numMarkers, markerType="arrow", markerScale=2, markerColor=color.green, dropTime=True, timeOffset=self.timeOffset, arrowOffset=self.arrowOffset)
 
     def test_init(self):
         self.assertEqual(self.obj, self.map.obj)
@@ -653,9 +654,7 @@ class TestMotionMapN(unittest.TestCase):
         points.reset()
         label.reset()
 
-        self.map = MotionMapN(self.obj, self.dt, self.numSteps, markerType="arrow", 
-                    markerScale=2, markerColor=color.green,
-                    dropTime=True, timeOffset=self.timeOffset, arrowOffset=self.arrowOffset)
+        self.map = MotionMapN(self.obj, self.dt, self.numSteps, markerType="arrow", markerScale=2, markerColor=color.green, dropTime=True, timeOffset=self.timeOffset, arrowOffset=self.arrowOffset)
 
     def test_init(self):
         self.assertEqual(self.obj, self.map.obj)
@@ -702,9 +701,7 @@ class TestPhysAxis(unittest.TestCase):
 
         curve.reset()
 
-        self.physAxis = PhysAxis(self.obj, self.numLabels, axisType=self.axisType, axis=self.axis, 
-                    startPos=self.startPos, length=self.length, labels = self.labels,
-                    labelOrientation=self.labelOrientation)
+        self.physAxis = PhysAxis(self.obj, self.numLabels, axisType=self.axisType, axis=self.axis, startPos=self.startPos, length=self.length, labels = self.labels, labelOrientation=self.labelOrientation)
 
     
     def test_init(self):
@@ -731,8 +728,7 @@ class TestPhysAxis(unittest.TestCase):
         newAxis = vector(0,0,1)
         startPos = vector(1,0,0)
         otherLabels = ["f", "g", "h", "i", "j"]
-        self.physAxis.reorient(axis=newAxis, startPos=startPos, length=1, 
-            labels=otherLabels, labelOrientation="right")
+        self.physAxis.reorient(axis=newAxis, startPos=startPos, length=1, labels=otherLabels, labelOrientation="right")
         self.assertEqual(self.physAxis.axis, newAxis)
         self.assertEqual(self.physAxis.startPos, startPos)
         self.assertEqual(self.physAxis.length, 1)
@@ -747,15 +743,9 @@ class TestPhysAxis(unittest.TestCase):
 
 
     def test_update(self):
-        startMarkerPos = vector(self.physAxis.intervalMarkers[-1].pos.x, 
-                                self.physAxis.intervalMarkers[-1].pos.y, 
-                                self.physAxis.intervalMarkers[-1].pos.z)
-        startLabelPos = vector(self.physAxis.intervalLabels[-1].pos.x,
-                                self.physAxis.intervalLabels[-1].pos.y,
-                                self.physAxis.intervalLabels[-1].pos.z)
-        startCurvePos = vector(self.physAxis.axisCurve.pos[0].x,
-                                self.physAxis.axisCurve.pos[0].y,
-                                self.physAxis.axisCurve.pos[0].z)
+        startMarkerPos = vector(self.physAxis.intervalMarkers[-1].pos.x, self.physAxis.intervalMarkers[-1].pos.y, self.physAxis.intervalMarkers[-1].pos.z)
+        startLabelPos = vector(self.physAxis.intervalLabels[-1].pos.x, self.physAxis.intervalLabels[-1].pos.y, self.physAxis.intervalLabels[-1].pos.z)
+        startCurvePos = vector(self.physAxis.axisCurve.pos[0].x, self.physAxis.axisCurve.pos[0].y, self.physAxis.axisCurve.pos[0].z)
 
         self.physAxis.update()
 

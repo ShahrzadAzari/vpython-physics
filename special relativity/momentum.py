@@ -1,5 +1,5 @@
 from __future__ import division, print_function  
-from visual import *  
+from vpython import *  
 from visual.graph import *  
 scene.background = color.white  
 scene.height = 50  
@@ -24,7 +24,7 @@ gamma = 1
   
 # start time at 0  
 t = 0  
-scene.center = (0,.1,0)  # move camera up  
+scene.center = vector(0,.1,0)  # move camera up  
 scene.range = 0.15  
   
 ## GRAPH STUFF  

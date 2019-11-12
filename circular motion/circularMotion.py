@@ -2,10 +2,8 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
-
 
 ### FUNCTIONS
 # ------------------------------------------------------------------------
@@ -26,7 +24,7 @@ scene.title = "Circular Motion Particle Model"
 scene.background = color.black
 
 # Define scene objects (units are in meters)
-string = cylinder(pos = vector(0, 0, 0), axis = (1, 0, 0), length = 1, radius = 0.01,
+string = cylinder(pos = vector(0, 0, 0), axis = vector(1, 0, 0), length = 1, radius = 0.01,
     color = color.green)
 
 ball = sphere(radius = 0.1, color = color.blue)

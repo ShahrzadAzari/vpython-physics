@@ -2,10 +2,8 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
-
 ### SETUP ELEMENTS FOR GRAPHING, SIMULATION, VISUALIZATION, TIMING
 # ------------------------------------------------------------------------
 
@@ -45,7 +43,7 @@ lorentzFactors = (1 / (math.sqrt(1 - (car.v.x**2 / c**2))),
       1 / (math.sqrt(1 - (car.v.z**2 / c**2))))
 
 # adjust the size of the car to account for length contraction
-car.size = (car.size.x / lorentzFactors[0], 
+car.size = vector(car.size.x / lorentzFactors[0], 
       car.size.y / lorentzFactors[1], 
       car.size.z / lorentzFactors[2]) 
 

@@ -12,13 +12,13 @@ scene.title = "Incline Plane"
 
 # Make scene background black
 scene.background = color.black
-scene.center = vector(1, 1, 0) # location at which the camera looks
+# location at which the camera looks
+scene.center = vector(1, 1, 0) 
 
 # Define scene objects (units are in meters)
 
 # 2-m long inclined plane whose center is at 1 m
-inclinedPlane = box(pos = vector(1, 0, 0), size = vector(2, 0.02, 0.2),
-    color = color.green, opacity = 0.3)
+inclinedPlane = box(pos = vector(1, 0, 0), size = vector(2, 0.02, 0.2), color = color.green, opacity = 0.3)
 
 # 20-cm long cart on the inclined plane
 cart = box(size = vector(0.2, 0.06, 0.06), color = color.blue)
@@ -29,29 +29,32 @@ velgraph = PhysGraph()
 accelgraph = PhysGraph()
 
 # Set up trail to mark the cart's trajectory
-trail = curve(color = color.yellow, radius = 0.01) # units are in meters
+# units are in meters
+trail = curve(color = color.yellow, radius = 0.01) 
 
 # Set up motion map for cart
-motionMap = MotionMap(cart, 2, # expected end time in seconds
-    10, # number of markers to draw
-    markerType = "breadcrumbs",
-    dropTime = False)
+# expected end time in seconds
+# number of markers to draw
+motionMap = MotionMap(cart, 2, 10, markerType = "breadcrumbs", dropTime = False)
 
 # Set timer in top right of screen
-timerDisplay = PhysTimer(2, 1.5) # timer position (units are in meters)
+# timer position (units are in meters)
+timerDisplay = PhysTimer(2, 1.5) 
 
 
 ### SETUP PARAMETERS AND INITIAL CONDITIONS
 # ----------------------------------------------------------------------------------------
 
 # Define parameters
-cart.m = 0.5 # mass of cart in kg
+# mass of cart in kg
+cart.m = 0.5 
 
 # initial position of the cart in(x, y, z) form, units are in meters
 #   cart is positioned on the inclined plane at the far left end
 cart.pos = vector(0, 0.04, 0.08)
 
-cart.v = vector(0, 0, 0) # initial velocity of car in (vx, vy, vz) form, units are m/s
+# initial velocity of car in (vx, vy, vz) form, units are m/s
+cart.v = vector(0, 0, 0) 
 
 # angle of inclined plane relative to the horizontal
 theta = 22.0 * (pi / 180.0)
@@ -64,11 +67,14 @@ cart.rotate(angle = theta, origin = vector(0, 0, 0), axis = vector(0,0,1))
 cart.v = norm(inclinedPlane.axis)
 cart.v.mag = 3
 
-g = 9.8 # acceleration due to gravity; units are m/s/s
+# acceleration due to gravity; units are m/s/s
+g = 9.8 
 
 # Define time parameters
-t = 0 # starting time
-deltat = 0.0005  # time step units are s
+# starting time
+t = 0 
+# time step units are s
+deltat = 0.0005  
 
 print("initial cart position (m): ", cart.pos)
 
@@ -76,7 +82,8 @@ print("initial cart position (m): ", cart.pos)
 ### CALCULATION LOOP; perform physics updates and drawing
 # ------------------------------------------------------------------------------------
 
-while cart.pos.y > 0.03 :  # while the cart's y-position is greater than 0 (above the ground)
+# while the cart's y-position is greater than 0 (above the ground)
+while cart.pos.y > 0.03 :  
  
     # Required to make animation visible / refresh smoothly (keeps program from running faster
     #    than 1000 frames/s)
@@ -96,9 +103,12 @@ while cart.pos.y > 0.03 :  # while the cart's y-position is greater than 0 (abov
 
     # Update motion map, graph, timer, and trail
     motionMap.update(t)
-    posgraph.plot(t, mag(cart.pos)) # plot position (along inclined plane) vs. time
-    velgraph.plot(t, mag(cart.v)) # plot velocity (along inclined plane) vs. time
-    accelgraph.plot(t, mag(Fnet) / cart.m) # plot acceleration (along inclined plane) vs. time
+# plot position (along inclined plane) vs. time
+    posgraph.plot(t, mag(cart.pos)) 
+# plot velocity (along inclined plane) vs. time
+    velgraph.plot(t, mag(cart.v)) 
+# plot acceleration (along inclined plane) vs. time
+    accelgraph.plot(t, mag(Fnet) / cart.m) 
     trail.append(pos = cart.pos)
     timerDisplay.update(t)
 

@@ -2,10 +2,8 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
-
 ### SETUP ELEMENTS FOR GRAPHING, SIMULATION, VISUALIZATION, TIMING
 # ------------------------------------------------------------------------
 
@@ -16,7 +14,7 @@ scene.title = "PMPM Lab Model"
 scene.background = color.black
 
 # Define scene objects (units are in meters)
-field = box(pos = vector(1.5, 0, 0), size = (3, .10, 1), color = color.green, opacity = 0.3)
+field = box(pos = vector(1.5, 0, 0), size = vector(3, .10, 1), color = color.green, opacity = 0.3)
 ball = sphere(radius = .05, color = color.blue)
 
 # Define axis marks the field with a specified number of tick marks

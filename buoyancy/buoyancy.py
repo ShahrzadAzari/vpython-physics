@@ -2,10 +2,8 @@
 # -----------------------------------------------------------------------
 
 from __future__ import division
-from visual import *
+from vpython import *
 from physutil import *
-from visual.graph import *
-
 ### FUNCTIONS
 # ------------------------------------------------------------------------
 
@@ -35,7 +33,7 @@ scene.title = "Buoyancy"
 scene.background = color.black
 
 # Define scene objects (units are in meters)
-fluid = box(size = (2, 2, .2), color = color.blue, opacity = 0.3)
+fluid = box(size = vector(2, 2, .2), color = color.blue, opacity = 0.3)
 object = box(color = color.red)
 
 # Set up graph with three plots
@@ -53,7 +51,7 @@ fluid.density = 1000 # density of the fluid in units of kg/m^3
 
 object.density = 500 # density of the object in units of kg/m^3
 object.pos = vector(0, 0, 0) # initial position of the mass in (x, y, z) form, units are in meters
-object.size = size = (0.4, 0.4, 0.1) # size of the object in (x, y, z) form, units are in meters
+object.size = size = vector(0.4, 0.4, 0.1) # size of the object in (x, y, z) form, units are in meters
 object.v = vector(0, 0, 0) # initial velocity of mass in (vx, vy, vz) form, units are m/s
 
 g = -9.8 # acceleration due to gravity; units are m/s/s

@@ -100,4 +100,4 @@ while t < 20 and object.pos.y > (fluid.pos.y - fluid.size.y/2) :  # run for one 
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the cart's final position
-print t
+print(t)

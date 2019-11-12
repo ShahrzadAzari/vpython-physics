@@ -91,4 +91,4 @@ while t < 2 :  # run for one second
 # --------------------------------------------------------------------------------------
 
 # Print the final time
-print t
+print(t)

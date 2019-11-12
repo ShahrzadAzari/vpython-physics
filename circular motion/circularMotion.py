@@ -97,5 +97,5 @@ while t < period :  # run for 10 seconds
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the ball's final position
-print t
-print Fnet
+print(t)
+print(Fnet)

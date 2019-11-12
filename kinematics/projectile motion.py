@@ -88,5 +88,5 @@ while ball.pos.y >= 0 :  #while the ball's y-position is greater than 0 (above t
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the ball's final position
-print t
-print ball.pos
+print(t)
+print(ball.pos)

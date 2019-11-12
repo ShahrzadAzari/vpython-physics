@@ -112,6 +112,6 @@ while t < 5000000 :
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the satellite's final position
-print t
-print satellite.v
-print Fnet/satellite.m
+print(t)
+print(satellite.v)
+print(Fnet/satellite.m)

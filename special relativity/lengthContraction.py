@@ -82,5 +82,5 @@ while  car.pos.x > -4.5 and car.pos.x < 4.5 :
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the car's size
-print t
-print car.size
+print(t)
+print(car.size)

@@ -76,5 +76,5 @@ while  car.pos.x > -1.50 and car.pos.x < 1.50 :  #while the ball's x-position is
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the car's final position
-print t
-print car.pos
+print(t)
+print(car.pos)

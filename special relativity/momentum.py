@@ -64,7 +64,7 @@ while stopper=='go':
   # plot pos.x, velocity.x of block  
   blockp.plot(pos=(t,pblock.x))  
   blockv.plot(pos=(t,pblock.x/(gamma*mblock)))  
-##  print t, block.y  
+##  print(t, block.y  )
   if scene.mouse.clicked:  
     stopper='stop'  
    

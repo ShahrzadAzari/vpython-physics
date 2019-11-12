@@ -85,4 +85,4 @@ while t < 10 :  # run for ten seconds
 # --------------------------------------------------------------------------------------
 
 # Print the final time
-print t
+print(t)

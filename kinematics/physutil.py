@@ -49,7 +49,7 @@ if __name__ == "__main__":
     label = Mock("label")
     points = Mock("points")
     curve = Mock("curve")
-    gdisplay = Mock("gdisplay")
+    graph = Mock("graph")
     gcurve = Mock("gcurve")
     gcurve.plots = []
     def mockPlot(pos):
@@ -68,6 +68,7 @@ if __name__ == "__main__":
 else:
     # These are the actual imports for the utility
     from vpython import *
+
 
 """
 #
@@ -149,9 +150,10 @@ class MotionMap:
                 if self.markerType == "arrow":
                     arrow(pos=self.obj.pos+self.arrowOffset, 
                         axis=self.markerScale*quantity, color=self.markerColor)
-                elif self.markerType == "breadcrumbs":
+                elif self.markerType == "breadcrumbs":                    
                     points(pos=self.obj.pos, 
-                        size=10*self.markerScale*quantity, color=self.markerColor)
+                        #size=10*self.markerScale*quantity, 
+                        color=self.markerColor)
 
                 #Also display timestamp if requested
                 if self.dropTime is not False:
@@ -370,7 +372,9 @@ class PhysAxis:
                 self.intervalLabels[i].text = str(labelText)
             else:
                 self.intervalMarkers.append(
-                    points(pos=intervalPos,color=self.axisColor,size = 6) )
+                    points(pos=intervalPos,color=self.axisColor
+                    #,size = 6
+                    ) )
                 self.intervalLabels.append(
                     label(pos=intervalPos+self.labelShift, text=str(labelText),box=False,height = 8, color=self.labelColor) )
             i=i+1
@@ -447,7 +451,7 @@ class PhysGraph:
         
         try:
             # Create our specific graph window
-            self.graphDisplay = gdisplay(x = 475, y = 350, title = title, xtitle = xlabel, ytitle = ylabel, background = backgroundColor)
+            self.graphDisplay = graph(x = 475, y = 350, title = title, xtitle = xlabel, ytitle = ylabel, background = backgroundColor)
 
             self.numPlots = numPlots
 

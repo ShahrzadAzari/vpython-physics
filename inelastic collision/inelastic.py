@@ -93,4 +93,4 @@ while mag(ball1.pos) < 2 and mag(ball2.pos) < 2 :  # while the balls are within 
 # --------------------------------------------------------------------------------------
 
 # Print the final time and the ball's final position
-print t
+print(t)

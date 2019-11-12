@@ -91,10 +91,10 @@ while (ball.pos.x < targetRange - 0.04) or (ball.pos.x > targetRange + 0.04) :
     # --------------------------------------------------------------------------------------
 
     # Print the final time and the ball's final position
-    print t
-    print ball.pos
+    print(t)
+    print(ball.pos)
 
 # Print the final time and the ball's final position
-print t
-print ball.pos
-print theta
+print(t)
+print(ball.pos)
+print(theta)

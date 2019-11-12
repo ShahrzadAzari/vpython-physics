@@ -372,7 +372,9 @@ class PhysAxis:
                 self.intervalLabels[i].text = str(labelText)
             else:
                 self.intervalMarkers.append(
-                    points(pos=intervalPos,color=self.axisColor,size = 6) )
+                    points(pos=intervalPos,color=self.axisColor
+                    #,size = 6
+                    ) )
                 self.intervalLabels.append(
                     label(pos=intervalPos+self.labelShift, text=str(labelText),box=False,height = 8, color=self.labelColor) )
             i=i+1
